@@ -80,27 +80,34 @@ function oData(res,config){
 	// +++
 	// route is a little extra function to enable rest-like routing on the client side
 	// +++
-	base.route=function(route,callback) {
-		if(typeof callback==='undefined') {
-			routeCallback=route;
-		}
-		else {
-			routeName=route;
-			routeCallback=callback;
-		}
-		var tempBase=base;
-		//TODO: Is there any way to use the build in on hash update function?!
-		var prevHash = window.location.hash;
-		setInterval(function () {
-			if (window.location.hash != prevHash) {
-				prevHash = window.location.hash;
-				tempBase.triggerRoute(window.location.hash,routeCallback);
-			} 
-		}, 100);
+	base.routes=function(routes,callback) {
 		
-		//trigger on init if the hash is the same like current
-		tempBase.triggerRoute(window.location.hash,routeCallback);
-
+		if(!isArray(routes)) {
+			routes=[routes];
+		}
+		
+		for(var i=0;i<routes.length;i++) {
+			
+			if(typeof callback==='undefined') {
+				routeCallback=routes[i];
+			}
+			else {
+				routeName=routes[i];
+				routeCallback=callback;
+			}
+			var tempBase=base;
+			//TODO: Is there any way to use the build in on hash update function?!
+			var prevHash = window.location.hash;
+			setInterval(function () {
+				if (window.location.hash != prevHash) {
+					prevHash = window.location.hash;
+					tempBase.triggerRoute(window.location.hash,routeCallback);
+				} 
+			}, 100);
+			
+			//trigger on init if the hash is the same like current
+			tempBase.triggerRoute(window.location.hash,routeCallback);
+		}
 		return(base);
 	}
 		
